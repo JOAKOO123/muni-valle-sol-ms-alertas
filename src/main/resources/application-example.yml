@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: ms-alerts
+  data:
+    mongodb:
+      uri: mongodb+srv://usuario:password@cluster.mongodb.net/ms-alerts?retryWrites=true&w=majority
+      database: ms-alerts
+
+server:
+  port: 8083
+jackson:
+  serialization: {}

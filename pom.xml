@@ -8,10 +8,10 @@
 		<version>4.0.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>cl.municipalidad</groupId>
-	<artifactId>ms-alertas</artifactId>
+	<groupId>cl.municipality</groupId>
+	<artifactId>ms-alerts</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
+	<name>ms-alerts</name>
 	<description/>
 	<url/>
 	<licenses>
