@@ -82,17 +82,28 @@ public class AlertService {
 
     /**
      * Cambia el estado de una alerta existente.
+     * Los valores validos son ACTIVE y RESOLVED.
      *
      * @param id     Identificador de la alerta a actualizar.
-     * @param status Nuevo estado: ACTIVE o RESOLVED.
+     * @param status Nuevo estado: "ACTIVE" o "RESOLVED".
      * @return DTO con la alerta actualizada.
-     * @throws AlertNotFoundException   si no existe ninguna alerta con el id indicado.
-     * @throws IllegalArgumentException si el valor de status no es valido.
+     * @throws AlertNotFoundException    si no existe ninguna alerta con el id indicado.
+     * @throws IllegalArgumentException si el valor de status no corresponde a ningun estado valido.
      */
     public AlertResponseDTO changeStatus(String id, String status) {
         Alert alert = alertRepository.findById(id)
                 .orElseThrow(() -> new AlertNotFoundException(id));
-        alert.setStatus(Alert.Status.valueOf(status));
+
+        Alert.Status newStatus;
+        try {
+            newStatus = Alert.Status.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                "Estado invalido: '" + status + "'. Los valores validos son: ACTIVE, RESOLVED"
+            );
+        }
+
+        alert.setStatus(newStatus);
         return toDTO(alertRepository.save(alert));
     }
 

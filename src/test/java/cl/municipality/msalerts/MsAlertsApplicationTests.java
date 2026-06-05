@@ -2,6 +2,7 @@ package cl.municipality.msalerts;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 /**
  * Prueba de integracion para verificar que el contexto de Spring Boot
@@ -16,7 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @version 1.0
  * @since 1.0
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@TestPropertySource(properties = {
+    "spring.data.mongodb.uri=mongodb://localhost:27017/ms-alerts-test",
+    "spring.data.mongodb.database=ms-alerts-test",
+    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration," +
+        "org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration"
+})
 class MsAlertsApplicationTests {
 
     /**
