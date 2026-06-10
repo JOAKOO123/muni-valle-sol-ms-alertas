@@ -35,7 +35,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
       containers:
         - name: ms-alertas
-          image: lsn33/muni-valle-sol-ms-alertas:latest
+          image: JOAKOO123/muni-valle-sol-ms-alertas:latest
           imagePullPolicy: Always
           ports:
             - name: http
@@ -88,6 +88,11 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
+      # tmp usa emptyDir — almacenamiento temporal en memoria, se limpia al reiniciar el pod.
+      # logs usa VolumeClaimTemplate abajo para persistir entre reinicios.
+      volumes:
+        - name: tmp
+          emptyDir: {}
   volumeClaimTemplates:
     - metadata:
         name: logs
@@ -96,7 +101,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: standard
+        storageClassName: standard-fast
         resources:
           requests:
             storage: 5Gi
