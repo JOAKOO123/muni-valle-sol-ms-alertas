@@ -1,3 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-alertas-headless
+  namespace: muni-valle-sol
+  labels:
+    app: ms-alertas
+spec:
+  clusterIP: None
+  selector:
+    app: ms-alertas
+  ports:
+    - name: http
+      port: 8083
+      targetPort: http
+  publishNotReadyAddresses: true
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,5 +29,5 @@ spec:
   ports:
     - name: http
       port: 8083
-      targetPort: 8083
+      targetPort: http
   type: ClusterIP

@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ms-alertas
+  namespace: muni-valle-sol
+  labels:
+    app: ms-alertas
+    version: v1
+spec:
+  serviceName: ms-alertas-headless
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms-alertas
+  template:
+    metadata:
+      labels:
+        app: ms-alertas
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8083"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - ms-alertas
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: ms-alertas
+          image: lsn33/muni-valle-sol-ms-alertas:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8083
+              protocol: TCP
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: muni-secrets
+                  key: mongo-uri
+            - name: SPRING_APPLICATION_NAME
+              value: "ms-alertas"
+            - name: SERVER_PORT
+              value: "8083"
+            - name: LOGGING_LEVEL_ROOT
+              value: "INFO"
+            - name: LOGGING_FILE_NAME
+              value: "/var/log/ms-alertas/application.log"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "150m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 45
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 2
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log/ms-alertas
+            - name: tmp
+              mountPath: /tmp
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+  volumeClaimTemplates:
+    - metadata:
+        name: logs
+        labels:
+          app: ms-alertas
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 5Gi

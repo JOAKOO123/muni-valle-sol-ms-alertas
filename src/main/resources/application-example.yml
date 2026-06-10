@@ -1,12 +1,75 @@
 spring:
   application:
-    name: ms-alerts
+    name: ms-alertas
   data:
     mongodb:
-      uri: mongodb+srv://usuario:password@cluster.mongodb.net/ms-alerts?retryWrites=true&w=majority
-      database: ms-alerts
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb+srv://username:password@cluster-muni-valle-sol.xxxxx.mongodb.net/alertas?retryWrites=true&w=majority}
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 server:
-  port: 8083
-jackson:
-  serialization: {}
+  port: ${SERVER_PORT:8083}
+  servlet:
+    context-path: /api/v1
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,readiness,metrics,prometheus,info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    cl.municipality.msalerts: DEBUG
+  file:
+    name: ${LOGGING_FILE_NAME:/var/log/ms-alertas/application.log}
+    max-size: 100MB
+    max-history: 30
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 5GB
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+    metrics:
+      enabled: true
+  retry:
+    instances:
+      default:
+        registerHealthIndicator: true
+        maxAttempts: 3
+        waitDuration: 1000
+        retryExceptions:
+          - java.net.ConnectException
+          - java.io.IOException
