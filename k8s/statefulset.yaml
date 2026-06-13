@@ -42,7 +42,7 @@ spec:
               containerPort: 8083
               protocol: TCP
           env:
-            - name: SPRING_MONGODB_URI
+            - name: SPRING_DATA_MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: muni-secrets
