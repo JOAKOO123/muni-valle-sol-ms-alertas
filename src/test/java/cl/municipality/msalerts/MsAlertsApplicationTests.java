@@ -19,7 +19,7 @@ import org.springframework.test.context.TestPropertySource;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource(properties = {
-    "spring.data.mongodb.uri=mongodb://localhost:27017/ms-alerts-test",
+    "spring.mongodb.uri=mongodb://localhost:27017/ms-alerts-test",
     "spring.data.mongodb.database=ms-alerts-test",
     "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration," +
         "org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration"

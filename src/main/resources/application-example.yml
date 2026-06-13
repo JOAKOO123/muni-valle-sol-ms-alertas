@@ -1,20 +1,13 @@
 spring:
   application:
     name: ms-alertas
-  data:
-    mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb+srv://username:password@cluster-muni-valle-sol.xxxxx.mongodb.net/alertas?retryWrites=true&w=majority}
-  jpa:
-    hibernate:
-      ddl-auto: validate
+  mongodb:
+    uri: ${SPRING_MONGODB_URI:mongodb+srv://username:password@cluster-muni-valle-sol.iutytut.mongodb.net/alertas?retryWrites=true&w=majority&appName=cluster-muni-valle-sol}
 
 server:
   port: ${SERVER_PORT:8083}
   servlet:
     context-path: /api/v1
-  error:
-    include-message: always
-    include-binding-errors: always
 
 management:
   endpoints:
@@ -67,7 +60,6 @@ resilience4j:
   retry:
     instances:
       default:
-        registerHealthIndicator: true
         maxAttempts: 3
         waitDuration: 1000
         retryExceptions:

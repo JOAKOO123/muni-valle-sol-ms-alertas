@@ -46,3 +46,4 @@ application-local.properties
 *.key
 *.pem
 secrets/
+k8s/secret.yaml
