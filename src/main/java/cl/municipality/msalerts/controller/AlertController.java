@@ -1,8 +1,9 @@
 package cl.municipality.msalerts.controller;
 
+import cl.municipality.msalerts.dto.AlertChangeStatusRequestDTO;
 import cl.municipality.msalerts.dto.AlertRequestDTO;
 import cl.municipality.msalerts.dto.AlertResponseDTO;
-import cl.municipality.msalerts.service.AlertService;
+import cl.municipality.msalerts.service.AlertServicePort;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Controlador REST para la gestion de alertas municipales.
@@ -18,7 +18,8 @@ import java.util.Map;
  *
  * <p>Patrones aplicados:</p>
  * <ul>
- *   <li>Facade Pattern: delega toda la logica al AlertService</li>
+ *   <li>Facade Pattern: delega toda la logica al {@link AlertServicePort}</li>
+ *   <li>Dependency Inversion Principle: depende de la interfaz, no de la implementacion</li>
  *   <li>Single Responsibility: solo gestiona los endpoints de alertas</li>
  * </ul>
  *
@@ -31,7 +32,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AlertController {
 
-    private final AlertService alertService;
+    private final AlertServicePort alertService;
 
     /**
      * Crea una nueva alerta.
@@ -86,15 +87,15 @@ public class AlertController {
      * PUT /api/alerts/{id}/status
      * Cuerpo esperado: {"status": "RESOLVED"}
      *
-     * @param id   Identificador de la alerta a actualizar.
-     * @param body Mapa con la clave status y su nuevo valor.
+     * @param id      Identificador de la alerta a actualizar.
+     * @param request DTO con el nuevo estado de la alerta.
      * @return 200 OK con el DTO de la alerta actualizada.
      */
     @PutMapping("/{id}/status")
     public ResponseEntity<AlertResponseDTO> changeStatus(
             @PathVariable String id,
-            @RequestBody Map<String, String> body) {
-        return ResponseEntity.ok(alertService.changeStatus(id, body.get("status")));
+            @Valid @RequestBody AlertChangeStatusRequestDTO request) {
+        return ResponseEntity.ok(alertService.changeStatus(id, request.status()));
     }
 
     /**
