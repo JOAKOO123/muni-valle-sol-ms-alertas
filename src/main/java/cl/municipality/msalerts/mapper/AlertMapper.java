@@ -5,27 +5,28 @@ import cl.municipality.msalerts.model.Alert;
 import org.springframework.stereotype.Component;
 
 /**
- * Componente encargado de convertir entidades {@link Alert} en DTOs de salida.
- * Centraliza la logica de mapeo para evitar duplicacion entre capas.
+ * Mapper que convierte entidades {@link Alert} en objetos {@link AlertResponseDTO}.
+ * Centraliza la transformacion para evitar duplicacion en la capa de servicio.
  *
  * <p>Patrones aplicados:</p>
  * <ul>
- *   <li>Mapper Pattern: separa la transformacion de datos de la logica de negocio</li>
- *   <li>Single Responsibility: solo se encarga de la conversion Alert → AlertResponseDTO</li>
+ *   <li>Mapper Pattern: convierte entre modelos de dominio y DTOs</li>
+ *   <li>Single Responsibility: solo realiza la conversion de tipos</li>
  * </ul>
  *
  * @author Beltran
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @Component
 public class AlertMapper {
 
     /**
-     * Convierte una entidad {@link Alert} en su representacion {@link AlertResponseDTO}.
+     * Convierte una entidad {@link Alert} en un {@link AlertResponseDTO}.
+     * Incluye coordenadas geograficas en el DTO de salida.
      *
-     * @param alert Entidad a convertir. No debe ser null.
-     * @return DTO con los datos de la alerta listos para ser enviados al cliente.
+     * @param alert Entidad de dominio a convertir.
+     * @return DTO de respuesta con todos los campos mapeados.
      */
     public AlertResponseDTO toDTO(Alert alert) {
         return new AlertResponseDTO(
@@ -36,7 +37,9 @@ public class AlertMapper {
                 alert.getStatus().name(),
                 alert.getDate(),
                 alert.getReportId(),
-                alert.getUserId()
+                alert.getUserId(),
+                alert.getLatitude(),
+                alert.getLongitude()
         );
     }
 }

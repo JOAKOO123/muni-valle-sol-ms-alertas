@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  * </ul>
  *
  * @author Beltran
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @Data
@@ -70,6 +70,18 @@ public class Alert {
      * Identificador del usuario relacionado. Puede ser null.
      */
     private Long userId;
+
+    /**
+     * Coordenada geografica de latitud de la ubicacion del incidente.
+     * Puede ser null si la alerta no fue generada desde un reporte con ubicacion.
+     */
+    private Double latitude;
+
+    /**
+     * Coordenada geografica de longitud de la ubicacion del incidente.
+     * Puede ser null si la alerta no fue generada desde un reporte con ubicacion.
+     */
+    private Double longitude;
 
     /**
      * Nivel de severidad de una alerta.

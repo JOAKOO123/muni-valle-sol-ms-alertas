@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * </ul>
  *
  * @author Beltran
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @ExtendWith(MockitoExtension.class)
@@ -56,7 +56,7 @@ class AlertControllerTest {
     /** DTO de respuesta reutilizado en multiples pruebas. */
     private final AlertResponseDTO mockResponse = new AlertResponseDTO(
             "abc123", "Incendio norte", "Fuego activo", "HIGH", "ACTIVE",
-            LocalDateTime.now(), 1L, 2L);
+            LocalDateTime.now(), 1L, 2L, null, null);
 
     /**
      * Configura MockMvc con el controlador y el manejador global de excepciones
@@ -190,7 +190,7 @@ class AlertControllerTest {
     void changeStatus_retorna200() throws Exception {
         AlertResponseDTO resuelto = new AlertResponseDTO(
                 "abc123", "Incendio", "Desc", "HIGH", "RESOLVED",
-                LocalDateTime.now(), 1L, 2L);
+                LocalDateTime.now(), 1L, 2L, null, null);
         when(alertService.changeStatus("abc123", "RESOLVED")).thenReturn(resuelto);
 
         mockMvc.perform(put("/api/alerts/abc123/status")

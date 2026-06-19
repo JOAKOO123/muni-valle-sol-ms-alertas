@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
  * </ul>
  *
  * @author Beltran
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @ExtendWith(MockitoExtension.class)
@@ -81,6 +81,8 @@ class AlertServiceTest {
                 .date(LocalDateTime.now())
                 .reportId(1L)
                 .userId(2L)
+                .latitude(null)
+                .longitude(null)
                 .build();
 
         mockRequest = new AlertRequestDTO(
@@ -88,12 +90,14 @@ class AlertServiceTest {
                 "Fuego activo en calle 5",
                 "HIGH",
                 1L,
-                2L
+                2L,
+                null,
+                null
         );
 
         mockDTO = new AlertResponseDTO(
                 "abc123", "Incendio sector norte", "Fuego activo en calle 5",
-                "HIGH", "ACTIVE", LocalDateTime.now(), 1L, 2L
+                "HIGH", "ACTIVE", LocalDateTime.now(), 1L, 2L, null, null
         );
     }
 
@@ -152,11 +156,14 @@ class AlertServiceTest {
         Alert resuelta = Alert.builder()
                 .id("xyz789").title("Humo").description("Desc")
                 .severity(Alert.Severity.MEDIUM).status(Alert.Status.RESOLVED)
-                .date(LocalDateTime.now()).build();
+                .date(LocalDateTime.now())
+                .latitude(null)
+                .longitude(null)
+                .build();
 
         AlertResponseDTO dtoResuelta = new AlertResponseDTO(
                 "xyz789", "Humo", "Desc", "MEDIUM", "RESOLVED",
-                LocalDateTime.now(), null, null
+                LocalDateTime.now(), null, null, null, null
         );
 
         when(alertRepository.findAll()).thenReturn(List.of(mockAlert, resuelta));
@@ -209,7 +216,7 @@ class AlertServiceTest {
 
         AlertResponseDTO resuelto = new AlertResponseDTO(
                 "abc123", "Incendio sector norte", "Fuego activo en calle 5",
-                "HIGH", "RESOLVED", LocalDateTime.now(), 1L, 2L
+                "HIGH", "RESOLVED", LocalDateTime.now(), 1L, 2L, null, null
         );
         when(alertMapper.toDTO(mockAlert)).thenReturn(resuelto);
 

@@ -14,9 +14,11 @@ import java.time.LocalDateTime;
  * @param date        Fecha y hora de creacion de la alerta.
  * @param reportId    Id del reporte asociado. Puede ser null.
  * @param userId      Id del usuario relacionado. Puede ser null.
+ * @param latitude    Latitud del incidente. Puede ser null.
+ * @param longitude   Longitud del incidente. Puede ser null.
  *
  * @author Beltran
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public record AlertResponseDTO(
@@ -27,5 +29,7 @@ public record AlertResponseDTO(
     String status,
     LocalDateTime date,
     Long reportId,
-    Long userId
+    Long userId,
+    Double latitude,
+    Double longitude
 ) {}

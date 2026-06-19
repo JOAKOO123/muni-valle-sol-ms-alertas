@@ -18,9 +18,11 @@ import jakarta.validation.constraints.NotNull;
  * @param severity    Severidad como texto: HIGH, MEDIUM o LOW. Obligatorio.
  * @param reportId    Id del reporte asociado. Opcional, puede ser null.
  * @param userId      Id del usuario relacionado. Opcional, puede ser null.
+ * @param latitude    Latitud del incidente. Opcional, puede ser null.
+ * @param longitude   Longitud del incidente. Opcional, puede ser null.
  *
  * @author Beltran
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public record AlertRequestDTO(
@@ -28,5 +30,7 @@ public record AlertRequestDTO(
         @NotBlank String description,
         @NotNull  String severity,
         Long reportId,
-        Long userId
+        Long userId,
+        Double latitude,
+        Double longitude
 ) {}
