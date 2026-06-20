@@ -2,7 +2,10 @@ package cl.municipality.msalerts;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
+
+import cl.municipality.msalerts.repository.AlertRepository;
 
 /**
  * Prueba de integracion para verificar que el contexto de Spring Boot
@@ -25,6 +28,10 @@ import org.springframework.test.context.TestPropertySource;
         "org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration"
 })
 class MsAlertsApplicationTests {
+
+    @MockBean
+    private AlertRepository alertRepository;
+
 
     /**
      * Verifica que el contexto de Spring se inicializa sin errores.

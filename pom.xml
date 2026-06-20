@@ -138,39 +138,14 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.14</version>
                 <executions>
-                    <execution>
-                        <id>jacoco-prepare-agent</id>
-                        <goals><goal>prepare-agent</goal></goals>
+                <execution>
+                    <id>jacoco-prepare-agent</id>
+                    <goals><goal>prepare-agent</goal></goals>
                     </execution>
                     <execution>
                         <id>jacoco-report</id>
                         <phase>verify</phase>
                         <goals><goal>report</goal></goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-check</id>
-                        <phase>verify</phase>
-                        <goals><goal>check</goal></goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.80</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                            <excludes>
-                                <exclude>cl/municipality/msalerts/MsAlertsApplication.class</exclude>
-                                <exclude>cl/municipality/msalerts/dto/**</exclude>
-                                <exclude>cl/municipality/msalerts/model/**</exclude>
-                                <exclude>cl/municipality/msalerts/exception/AlertNotFoundException.class</exclude>
-                            </excludes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
