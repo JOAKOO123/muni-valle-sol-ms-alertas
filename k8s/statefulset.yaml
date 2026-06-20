@@ -45,8 +45,8 @@ spec:
             - name: SPRING_DATA_MONGODB_URI
               valueFrom:
                 secretKeyRef:
-                  name: muni-secrets
-                  key: mongo-uri
+                  name: ms-alertas-secret
+                  key: SPRING_DATA_MONGODB_URI
             - name: SPRING_APPLICATION_NAME
               value: "ms-alertas"
             - name: SERVER_PORT
