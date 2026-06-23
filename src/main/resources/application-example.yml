@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: ms-alertas
+  mongodb:
+    uri: ${SPRING_MONGODB_URI:mongodb+srv://username:password@cluster-muni-valle-sol.iutytut.mongodb.net/alertas?retryWrites=true&w=majority&appName=cluster-muni-valle-sol}
+
+server:
+  port: ${SERVER_PORT:8083}
+  servlet:
+    context-path: /api/v1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,readiness,metrics,prometheus,info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    cl.municipality.msalerts: DEBUG
+  file:
+    name: ${LOGGING_FILE_NAME:/var/log/ms-alertas/application.log}
+    max-size: 100MB
+    max-history: 30
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 5GB
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+    metrics:
+      enabled: true
+  retry:
+    instances:
+      default:
+        maxAttempts: 3
+        waitDuration: 1000
+        retryExceptions:
+          - java.net.ConnectException
+          - java.io.IOException
