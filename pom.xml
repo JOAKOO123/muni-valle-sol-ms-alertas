@@ -34,10 +34,27 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- GlitchTip / Sentry BOM -->
+            <dependency>
+                <groupId>io.sentry</groupId>
+                <artifactId>sentry-bom</artifactId>
+                <version>8.15.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
+        <!-- GlitchTip / Sentry (Spring Boot 3.x / Jakarta) -->
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-spring-boot-starter-jakarta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-logback</artifactId>
+        </dependency>
         <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
