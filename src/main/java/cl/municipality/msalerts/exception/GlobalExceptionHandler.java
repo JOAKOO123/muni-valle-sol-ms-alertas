@@ -1,10 +1,15 @@
 package cl.municipality.msalerts.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import cl.municipality.msalerts.glitchtip.GlitchTipErrorReporter;
+import cl.municipality.msalerts.glitchtip.GlitchTipLogger;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -26,6 +31,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    private final GlitchTipErrorReporter errorReporter;
+    private final GlitchTipLogger glitchTipLogger;
+
+    public GlobalExceptionHandler(GlitchTipErrorReporter errorReporter, GlitchTipLogger glitchTipLogger) {
+        this.errorReporter = errorReporter;
+        this.glitchTipLogger = glitchTipLogger;
+    }
+
     /**
      * Maneja el caso en que no se encuentra una alerta por su id.
      *
@@ -34,6 +49,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AlertNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFound(AlertNotFoundException ex) {
+        glitchTipLogger.warn(logger, "Alerta no encontrada en ms-alertas: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                 "error", ex.getMessage(),
                 "timestamp", LocalDateTime.now().toString(),
@@ -53,6 +69,7 @@ public class GlobalExceptionHandler {
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .findFirst()
                 .orElse("Datos de entrada invalidos");
+        glitchTipLogger.warn(logger, "Validacion fallida en ms-alertas: {}", message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
                 "error", message,
                 "timestamp", LocalDateTime.now().toString(),
@@ -68,6 +85,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
+        glitchTipLogger.warn(logger, "Valor invalido recibido en ms-alertas: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
                 "error", ex.getMessage(),
                 "timestamp", LocalDateTime.now().toString(),
@@ -83,6 +101,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntime(RuntimeException ex) {
+        errorReporter.captureException(ex, "Excepcion no controlada en ms-alertas");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                 "error", ex.getMessage(),
                 "timestamp", LocalDateTime.now().toString(),
