@@ -65,7 +65,7 @@ class AlertControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(alertController)
-                .setControllerAdvice(new GlobalExceptionHandler())
+                .setControllerAdvice(new GlobalExceptionHandler(new cl.municipality.msalerts.glitchtip.GlitchTipErrorReporter(), new cl.municipality.msalerts.glitchtip.GlitchTipLogger()))
                 .build();
     }
 
